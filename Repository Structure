@@ -1,0 +1,92 @@
+📁 Repository Structure
+skillforge-ai/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── .env.example
+├── requirements.txt
+├── pyproject.toml
+├── docker-compose.yml
+├── Dockerfile
+│
+├── src/
+│   ├── config.py
+│   ├── main.py
+│   │
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── nova_sonic.py           # Nova 2 Sonic voice coaching
+│   │   ├── nova_lite.py            # Nova 2 Lite reasoning agents
+│   │   ├── nova_embeddings.py      # Nova multimodal embeddings
+│   │   └── nova_act.py             # Nova Act UI automation
+│   │
+│   ├── agents/
+│   │   ├── __init__.py
+│   │   ├── orchestrator.py         # Agent fleet coordinator
+│   │   ├── career_coach.py         # Voice coaching session manager
+│   │   ├── skills_gap_agent.py     # Skills gap analysis agent
+│   │   ├── learning_path_agent.py  # Learning path architect agent
+│   │   ├── job_market_agent.py     # Job market intelligence agent
+│   │   └── enrollment_agent.py     # Nova Act enrollment automation
+│   │
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── skills_graph.py         # Semantic skills knowledge graph
+│   │   ├── job_market_service.py   # Real-time job market data ingestion
+│   │   ├── learning_catalog.py     # 50K+ learning resource catalog
+│   │   └── portfolio_analyzer.py  # Resume & portfolio multimodal analysis
+│   │
+│   ├── database/
+│   │   ├── __init__.py
+│   │   ├── dynamodb.py             # DynamoDB learner profiles
+│   │   └── opensearch_client.py   # OpenSearch vector store
+│   │
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── app.py                  # FastAPI application
+│   │   ├── websocket.py            # WebSocket voice streaming handler
+│   │   └── routes/
+│   │       ├── __init__.py
+│   │       ├── coaching.py
+│   │       ├── skills.py
+│   │       ├── learning.py
+│   │       └── jobs.py
+│   │
+│   └── utils/
+│       ├── __init__.py
+│       ├── audio.py
+│       └── helpers.py
+│
+├── frontend/
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── next.config.js
+│   ├── tailwind.config.ts
+│   └── src/
+│       ├── app/
+│       │   ├── layout.tsx
+│       │   ├── page.tsx
+│       │   └── dashboard/
+│       │       └── page.tsx
+│       ├── components/
+│       │   ├── VoiceCoach.tsx
+│       │   ├── SkillsRadar.tsx
+│       │   ├── LearningPath.tsx
+│       │   ├── JobMarket.tsx
+│       │   └── CareerReadiness.tsx
+│       └── lib/
+│           ├── api.ts
+│           └── websocket.ts
+│
+├── infrastructure/
+│   └── terraform/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+│
+└── tests/
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_models.py
+    ├── test_agents.py
+    └── test_api.py
