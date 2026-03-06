@@ -1,0 +1,75 @@
+# ── Python ─────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# ── Virtual Environments ───────────────────────────────────────────
+.venv/
+venv/
+env/
+.env.local
+.env.production
+
+# ── Environment / Secrets ──────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# ── Node / Frontend ────────────────────────────────────────────────
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/dist/
+frontend/.env.local
+frontend/.env.production
+.npm
+npm-debug.log*
+yarn-error.log
+.pnpm-debug.log*
+
+# ── AWS ────────────────────────────────────────────────────────────
+.aws/
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+
+# ── IDE ────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Docker ─────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── Audio / Media (large binary files) ────────────────────────────
+*.wav
+*.mp3
+*.pcm
+*.mp4
+
+# ── LocalStack data ────────────────────────────────────────────────
+.localstack/
+
+# ── SkillForge-specific ────────────────────────────────────────────
+nova_act_screenshots/
+session_recordings/

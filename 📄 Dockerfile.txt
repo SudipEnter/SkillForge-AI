@@ -1,0 +1,79 @@
+# ═══════════════════════════════════════════════════════════════
+#  SkillForge AI — Multi-stage Docker Build
+#  Stage 1: Python backend
+#  Stage 2: Next.js frontend (optional, can be deployed separately)
+# ═══════════════════════════════════════════════════════════════
+
+# ── Backend Build ────────────────────────────────────────────────
+FROM python:3.12-slim AS backend-base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    build-essential \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copy application source
+COPY src/ ./src/
+COPY pyproject.toml .
+
+# ── Backend Production Image ─────────────────────────────────────
+FROM backend-base AS backend
+
+# Create non-root user
+RUN groupadd --gid 1001 skillforge && \
+    useradd --uid 1001 --gid 1001 --no-create-home skillforge
+
+COPY --from=backend-base /app /app
+RUN chown -R skillforge:skillforge /app
+
+USER skillforge
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["python", "-m", "src.main"]
+
+# ── Frontend Build ───────────────────────────────────────────────
+FROM node:20-alpine AS frontend-deps
+WORKDIR /frontend
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci --ignore-scripts
+
+FROM node:20-alpine AS frontend-builder
+WORKDIR /frontend
+COPY --from=frontend-deps /frontend/node_modules ./node_modules
+COPY frontend/ .
+ARG NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+RUN npm run build
+
+# ── Frontend Production Image ────────────────────────────────────
+FROM node:20-alpine AS frontend
+ENV NODE_ENV=production
+WORKDIR /frontend
+RUN addgroup --gid 1001 nodejs && \
+    adduser --uid 1001 --gid 1001 --disabled-password nextjs
+
+COPY --from=frontend-builder /frontend/public ./public
+COPY --from=frontend-builder --chown=nextjs:nodejs /frontend/.next/standalone ./
+COPY --from=frontend-builder --chown=nextjs:nodejs /frontend/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+CMD ["node", "server.js"]
